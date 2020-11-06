@@ -7,18 +7,23 @@ object ChildActors extends App {
   // actors can create other actors
 
   object Parent {
+
     case class CreateChild(name: String)
+
     case class TellChild(message: String)
+
   }
 
   class Parent extends Actor {
+
     import Parent._
+
     override def receive: Receive = {
       case CreateChild(name) =>
         println(s"${self.path} creating child")
         val childRef = context.actorOf(Props[Child], name)
         context.become(withChild(childRef))
-      }
+    }
 
     def withChild(child: ActorRef): Receive = {
       case TellChild(message) => child forward message
@@ -31,6 +36,7 @@ object ChildActors extends App {
       case message => println(s"${self.path} I got $message")
     }
   }
+
   import Parent._
 
   val system = ActorSystem("parentChildDemo")
@@ -50,15 +56,22 @@ object ChildActors extends App {
 
   // DANGER: never pass mutable actor state or 'this' reference to child actors!
   object NaiveBankAccount {
+
     case class Deposit(amount: Int)
+
     case class Withdraw(amount: Int)
+
     case object InitAccount
 
   }
+
   class NaiveBankAccount extends Actor {
+
     import NaiveBankAccount._
     import CreditCard._
+
     var balance = 0
+
     override def receive: Receive = {
       case InitAccount =>
         val creditCard = context.actorOf(Props[CreditCard], "card")
@@ -71,6 +84,7 @@ object ChildActors extends App {
       println(f"depositing $a on top of $balance")
       balance += a
     }
+
     def withdraw(a: Int) = {
       println(f"withdrawing $a from $balance")
       balance -= a
@@ -78,21 +92,27 @@ object ChildActors extends App {
   }
 
   object CreditCard {
+
     case class AttachToAccount(bankAccount: NaiveBankAccount) // not good, needs to be ActorRef
     case object CheckStatus
+
   }
 
   class CreditCard extends Actor {
+
     import NaiveBankAccount._
     import CreditCard._
+
     override def receive: Receive = {
       case AttachToAccount(account) => context.become(attachedTo(account))
     }
+
     def attachedTo(acc: NaiveBankAccount): Receive = {
       case CheckStatus => println(s"${self.path} processed")
         acc.withdraw(1) // WRONG
     }
   }
+
   import NaiveBankAccount._
   import CreditCard._
 

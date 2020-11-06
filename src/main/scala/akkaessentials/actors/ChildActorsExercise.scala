@@ -7,13 +7,19 @@ object ChildActorsExercise extends App {
   // distributed word counting
 
   object WordCounterMaster {
+
     case class Initialize(nChildren: Int)
+
     case class WordCountTask(text: String, taskId: Int)
+
     case class WordCountReply(count: Int, taskId: Int)
+
   }
 
   class WordCounterMaster extends Actor {
+
     import WordCounterMaster._
+
     override def receive: Receive = {
       case Initialize(n) =>
         val children = (0 until n).toList.map(_ => context.actorOf(Props[WordCounterWorker]))
@@ -30,7 +36,7 @@ object ChildActorsExercise extends App {
         val originalSender = sender()
         val child = children(counter)
         child ! WordCountTask(text, taskId)
-        context.become(receiveWithChildren(children, (counter + 1)  % children.length, taskId + 1, requestMap + (taskId -> originalSender)))
+        context.become(receiveWithChildren(children, (counter + 1) % children.length, taskId + 1, requestMap + (taskId -> originalSender)))
       case WordCountReply(count, idx) =>
         requestMap(idx) ! WordCountReply(count, idx)
         context.become(receiveWithChildren(children, counter, taskId, requestMap - idx))
@@ -39,7 +45,9 @@ object ChildActorsExercise extends App {
   }
 
   class WordCounterWorker extends Actor {
+
     import WordCounterMaster._
+
     override def receive: Receive = {
       case WordCountTask(text, oi) => sender() ! WordCountReply(text.split(" ").length, oi)
     }
@@ -63,7 +71,6 @@ object ChildActorsExercise extends App {
 
   val main = system.actorOf(Props[Main])
   main ! "start"
-
 
 
   /*

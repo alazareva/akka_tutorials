@@ -100,14 +100,19 @@ object ActorsIntro extends App {
   // make it interact with some other kind of actor and print reply
 
   case object Counter {
+
     case object Inc
+
     case object Dec
+
     case object Print
 
   }
 
   class Counter extends Actor {
+
     import Counter._
+
     var c = 0
 
     override def receive: Receive = {
@@ -116,6 +121,7 @@ object ActorsIntro extends App {
       case Print => println(f"[counter] Count is $c")
     }
   }
+
   println("Counter Example")
 
   val counter = actorSystem.actorOf(Props[Counter], "counter")
@@ -127,12 +133,17 @@ object ActorsIntro extends App {
 
 
   trait BankResponse
+
   case object Failed extends BankResponse
+
   case object OK extends BankResponse
 
   trait Transaction
+
   case class Deposit(amount: Int, ref: ActorRef) extends Transaction
+
   case class Withdraw(amount: Int, ref: ActorRef) extends Transaction
+
   case class Statement(ref: ActorRef) extends Transaction
 
   case class StatementReport(report: String)
@@ -152,14 +163,15 @@ object ActorsIntro extends App {
 
   class BankAccount extends Actor {
     private var balance = 0
+
     override def receive: Receive = {
       case amount: Int => {
-      if (balance + amount < 0) context.sender() ! Failed
-      else {
-        balance += amount
-        context.sender() ! OK
+        if (balance + amount < 0) context.sender() ! Failed
+        else {
+          balance += amount
+          context.sender() ! OK
+        }
       }
-    }
       case Statement => context.sender() ! StatementReport(f"Balance is $balance")
     }
   }

@@ -8,6 +8,7 @@ import scala.concurrent.duration._
 import scala.util.Random
 
 class BasicSpec extends TestKit(ActorSystem("basicSpec")) with ImplicitSender with WordSpecLike with BeforeAndAfterAll {
+
   import BasicSpec._
 
   override def afterAll(): Unit = {
@@ -81,6 +82,7 @@ class BasicSpec extends TestKit(ActorSystem("basicSpec")) with ImplicitSender wi
 }
 
 object BasicSpec {
+
   class SimpleActor extends Actor {
     override def receive: Receive = {
       case message => sender() ! message
@@ -93,6 +95,7 @@ object BasicSpec {
 
   class LabTestActor extends Actor {
     val random = new Random()
+
     override def receive: Receive = {
       case "tech" =>
         sender() ! "scala"
@@ -101,4 +104,5 @@ object BasicSpec {
       case message: String => sender() ! message.toUpperCase
     }
   }
+
 }

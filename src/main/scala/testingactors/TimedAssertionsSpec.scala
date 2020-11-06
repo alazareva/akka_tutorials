@@ -9,7 +9,9 @@ import scala.util.Random
 import scala.concurrent.duration._
 
 object TimedAssertionsSpec {
+
   case class WorkRes(x: Int)
+
   class WorkerActor extends Actor {
     override def receive: Receive = {
       case "work" =>
@@ -23,6 +25,7 @@ object TimedAssertionsSpec {
         })
     }
   }
+
 }
 
 class TimedAssertionsSpec extends
@@ -30,6 +33,7 @@ class TimedAssertionsSpec extends
   ImplicitSender with
   WordSpecLike with
   BeforeAndAfterAll {
+
   import TimedAssertionsSpec._
 
   override def afterAll(): Unit = TestKit.shutdownActorSystem(system)
@@ -38,15 +42,15 @@ class TimedAssertionsSpec extends
     val workerActor = system.actorOf(Props[WorkerActor])
 
     "reply in a timely manner" in {
-      within(500 millis, 1 second){
+      within(500 millis, 1 second) {
         workerActor ! "work"
         expectMsg(WorkRes(42))
       }
     }
-    "reply with cadence" in  {
+    "reply with cadence" in {
       within(1 second) {
         workerActor ! "workSeq"
-       val res = receiveWhile[Int](max=2 seconds, idle=500 millis, messages=10) {
+        val res = receiveWhile[Int](max = 2 seconds, idle = 500 millis, messages = 10) {
           case WorkRes(result) => result
         }
         assert(res.sum > 5)

@@ -5,6 +5,7 @@ import akka.testkit.{ImplicitSender, TestKit, TestProbe}
 import org.scalatest.{BeforeAndAfterAll, WordSpecLike}
 
 object TestProbeSpec {
+
   // word counting master - worker
 
   // send work to master
@@ -12,10 +13,15 @@ object TestProbeSpec {
   // worker responds to master
   // master responds to sender
   case class Register(worker: ActorRef)
+
   case class Work(text: String)
+
   case class WorkerWork(text: String, orgSender: ActorRef)
+
   case class WorkCompleted(count: Int, orgSender: ActorRef)
+
   case class Report(count: Int)
+
   case object RegisterAk
 
   class Master extends Actor {
@@ -38,11 +44,12 @@ object TestProbeSpec {
 }
 
 class TestProbeSpec extends TestKit(ActorSystem("probeSpec")) with ImplicitSender with WordSpecLike with BeforeAndAfterAll {
+
   import TestProbeSpec._
 
   override def afterAll(): Unit = TestKit.shutdownActorSystem(system)
 
-  "a master"  should {
+  "a master" should {
     "register a worker" in {
       val master = system.actorOf(Props[Master])
       val worker = TestProbe("worker")
@@ -78,9 +85,6 @@ class TestProbeSpec extends TestKit(ActorSystem("probeSpec")) with ImplicitSende
       expectMsg(Report(2))
     }
   }
-
-
-
 
 
 }

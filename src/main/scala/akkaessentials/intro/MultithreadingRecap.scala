@@ -6,7 +6,7 @@ import scala.util.{Failure, Success}
 object MultithreadingRecap extends App {
 
   // creating thread
-   val aThread = new Thread(() => println("I'm a thread"))
+  val aThread = new Thread(() => println("I'm a thread"))
   aThread.start()
   aThread.join()
 
@@ -44,7 +44,7 @@ object MultithreadingRecap extends App {
   }
 
   val aProcessedFuture = future.map(_ + 1)
-  val aFlatFuture = future.flatMap(v => Future( v + 2))
+  val aFlatFuture = future.flatMap(v => Future(v + 2))
   val filterd = future.filter(_ % 2 == 0) // fails with NoSuchElementException
 
   // for comprehensions
@@ -97,7 +97,7 @@ object MultithreadingRecap extends App {
           runningThread.wait()
         })
       }
-      task.synchronized{
+      task.synchronized {
         println("I have a task")
         task.run()
         task = null
@@ -122,10 +122,10 @@ object MultithreadingRecap extends App {
 
   // 1M nums between 10 threads
 
-  val futures = (0 to 9).map(i => 100000 * i until 100000  * (i + 1)).map(range => Future{
+  val futures = (0 to 9).map(i => 100000 * i until 100000 * (i + 1)).map(range => Future {
     if (range.contains(25553)) throw new RuntimeException("Weird number")
     range.sum
-})
+  })
 
   val sumFuture = Future.reduceLeft(futures)(_ + _)
   sumFuture.onComplete(println) // hard to find where the failure happened

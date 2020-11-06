@@ -5,22 +5,35 @@ import akka.actor.{Actor, ActorRef, ActorSystem, Props}
 object ChangingActorBehavior extends App {
 
   object Mom {
+
     case class Food(food: String)
+
     case class Ask(message: String)
+
     val VEGETABLE = "veggies"
     val CHOCOLATE = "chocolate"
+
     case class MomStart(kid: ActorRef)
+
   }
+
   object FussyKid {
+
     case object KitAccept
+
     case object KitReject
+
     val HAPPY = "happy"
     val SAD = "sad"
   }
+
   class FussyKid extends Actor {
+
     import FussyKid._
     import Mom._
+
     var state = HAPPY
+
     override def receive: Receive = {
       case Food(VEGETABLE) => state = SAD
       case Food(CHOCOLATE) => state = HAPPY
@@ -31,6 +44,7 @@ object ChangingActorBehavior extends App {
   }
 
   class StatelessFussyKid extends Actor {
+
     import FussyKid._
     import Mom._
 
@@ -41,6 +55,7 @@ object ChangingActorBehavior extends App {
       case Food(CHOCOLATE) => ()
       case Ask(_) => sender() ! KitAccept
     }
+
     def sadReceive: Receive = {
       case Food(VEGETABLE) => context.become(sadReceive, false)
       case Food(CHOCOLATE) => context.unbecome()
@@ -49,8 +64,10 @@ object ChangingActorBehavior extends App {
   }
 
   class Mom extends Actor {
+
     import Mom._
     import FussyKid._
+
     override def receive: Receive = {
       case MomStart(kid) =>
         kid ! Food(VEGETABLE)
@@ -80,13 +97,15 @@ object ChangingActorBehavior extends App {
 
 
   case object Inc
+
   case object Dec
+
   case object Count
 
   class Counter extends Actor {
     override def receive: Receive = dispatch(0)
 
-    def dispatch(i: Int): Receive  = {
+    def dispatch(i: Int): Receive = {
       case Inc => context.become(dispatch(i + 1))
       case Dec => context.become(dispatch(i - 1))
       case Count => println(f"Count is $i")
@@ -104,7 +123,9 @@ object ChangingActorBehavior extends App {
   // 2) a simplified voting system
 
   case class Vote(candidate: String)
+
   case object VoteStatusRequest
+
   case class VoteStatusResponse(candidate: Option[String])
 
   class Citizen extends Actor {
@@ -114,11 +135,13 @@ object ChangingActorBehavior extends App {
       case VoteStatusRequest => sender ! VoteStatusResponse(Some(candidate))
       case Vote(_) => ()
     }
+
     def didNotVoteReceive: Receive = {
       case VoteStatusRequest => sender() ! VoteStatusResponse(None)
       case Vote(candidate) => context.become(votedReceive(candidate))
     }
   }
+
   case class AggVotes(citizens: Set[ActorRef])
 
   class VoteAgg extends Actor {
@@ -129,6 +152,7 @@ object ChangingActorBehavior extends App {
         citizens.foreach(_ ! VoteStatusRequest)
         context.become(receiveWaiting(List.empty[Option[String]], citizens.size))
     }
+
     def receiveWaiting(votes: List[Option[String]], totalCitizens: Int): Receive = {
       case VoteStatusResponse(resp) =>
         val allVotes = resp :: votes

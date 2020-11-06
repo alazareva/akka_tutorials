@@ -2,19 +2,25 @@ package faulttolerance
 
 import akka.actor.{Actor, ActorLogging, ActorSystem, PoisonPill, Props}
 
-object ActorLifecycle extends  App {
+object ActorLifecycle extends App {
 
   object LifecycleActor {
+
     case object StartChild
+
   }
+
   class LifecycleActor extends Actor with ActorLogging {
+
     import LifecycleActor._
+
     override def receive: Receive = {
       case StartChild =>
         context.actorOf(Props[LifecycleActor], "child")
     }
 
     override def preStart(): Unit = log.info("I am starting")
+
     override def postStop(): Unit = log.info("I am stopping")
   }
 
@@ -31,13 +37,16 @@ object ActorLifecycle extends  App {
   // restart
 
   object Fail
+
   object FailChild
 
   object Check
+
   object CheckChild
 
   class Child extends Actor with ActorLogging {
     override def preStart(): Unit = log.info("supervised child starting")
+
     override def postStop(): Unit = log.info("supervised child stopping")
 
     override def preRestart(reason: Throwable, message: Option[Any]): Unit = {
@@ -56,6 +65,7 @@ object ActorLifecycle extends  App {
 
   class Parent extends Actor with ActorLogging {
     private val child = context.actorOf(Props[Child], "supervised")
+
     override def receive: Receive = {
       case FailChild => child ! Fail
       case CheckChild => child ! Check
