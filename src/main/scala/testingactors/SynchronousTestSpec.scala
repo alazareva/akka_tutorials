@@ -7,6 +7,7 @@ import org.scalatest.{BeforeAndAfterAll, WordSpecLike}
 import scala.concurrent.duration.Duration
 
 class SynchronousTestSpec extends WordSpecLike with BeforeAndAfterAll {
+
   import SynchronousTestSpec._
 
   implicit val system = ActorSystem("syncTest")
@@ -41,7 +42,9 @@ class SynchronousTestSpec extends WordSpecLike with BeforeAndAfterAll {
 object SynchronousTestSpec {
 
   case object Inc
+
   case object Read
+
   class Counter extends Actor {
     var count = 0
 
@@ -51,4 +54,5 @@ object SynchronousTestSpec {
     }
 
   }
+
 }

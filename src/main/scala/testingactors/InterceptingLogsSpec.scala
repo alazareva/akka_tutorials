@@ -8,15 +8,21 @@ import org.scalatest.{BeforeAndAfterAll, WordSpecLike}
 object InterceptingLogsSpec {
 
   case class Checkout(item: String, creditCard: String)
+
   case class AuthorizeCard(creditCard: String)
+
   case object PaymentAccepted
+
   case object PaymentDenied
+
   case class DispatchOrder(item: String)
+
   case object OrderConfirmed
 
   class CheckoutActor extends Actor {
     private val paymentManager = context.actorOf(Props[PaymentManager])
     private val fulfillmentManager = context.actorOf(Props[FulfillmentManager])
+
     override def receive: Receive = awaitingCheckout
 
     def awaitingCheckout: Receive = {
@@ -47,6 +53,7 @@ object InterceptingLogsSpec {
 
   class FulfillmentManager extends Actor with ActorLogging {
     var orderId = 0
+
     override def receive: Receive = {
       case DispatchOrder(item) =>
         orderId += 1
@@ -55,6 +62,7 @@ object InterceptingLogsSpec {
     }
 
   }
+
 }
 
 class InterceptingLogsSpec extends

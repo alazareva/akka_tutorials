@@ -8,14 +8,16 @@ import org.scalatest.{BeforeAndAfterAll, WordSpecLike}
 object SupervisionSpec {
 
   case object Report
+
   class FussyWordCounter extends Actor {
     var words = 0
+
     override def receive: Receive = {
       case Report => sender() ! words
-      case "" => throw  new NullPointerException("empty string")
+      case "" => throw new NullPointerException("empty string")
       case text: String =>
         if (text.length > 20) throw new RuntimeException("too long")
-        else if (!Character.isUpperCase(text(0))) throw  new IllegalArgumentException("must be upper case")
+        else if (!Character.isUpperCase(text(0))) throw new IllegalArgumentException("must be upper case")
         else words += text.split(" ").length
       case _ => throw new Exception("bad message")
     }
@@ -28,6 +30,7 @@ object SupervisionSpec {
       case _: RuntimeException => Resume
       case _: Exception => Escalate
     }
+
     override def receive: Receive = {
       case props: Props =>
         val child = context.actorOf(props)
@@ -51,11 +54,11 @@ object SupervisionSpec {
 }
 
 
-class SupervisionSpec  extends
-    TestKit(ActorSystem("supervisionSpec")) with
-    ImplicitSender with
-    WordSpecLike with
-    BeforeAndAfterAll {
+class SupervisionSpec extends
+  TestKit(ActorSystem("supervisionSpec")) with
+  ImplicitSender with
+  WordSpecLike with
+  BeforeAndAfterAll {
 
   import SupervisionSpec._
 

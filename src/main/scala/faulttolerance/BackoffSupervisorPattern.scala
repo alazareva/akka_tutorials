@@ -13,6 +13,7 @@ import scala.util.{Success, Try}
 object BackoffSupervisorPattern extends App {
 
   case object ReadFile
+
   class FileBasedPersistentActor extends Actor with ActorLogging {
 
     override def preStart(): Unit =
@@ -25,6 +26,7 @@ object BackoffSupervisorPattern extends App {
       log.warning("actor restarting")
 
     var dataSource: Source = null
+
     override def receive: Receive = {
       case ReadFile =>
         if (dataSource == null)
@@ -54,7 +56,7 @@ object BackoffSupervisorPattern extends App {
     )
   )
 
- // val simpleBackOffSupervisor = system.actorOf(simpleSupervisorProps, "simpleSupervisor")
+  // val simpleBackOffSupervisor = system.actorOf(simpleSupervisorProps, "simpleSupervisor")
   // simpleSupervisor -> simpleBackoffActor is the child
   // supervision strategy is default
   // first attempt in 3 seconds, then 6 then 12 etc... till 30 with some noise
@@ -95,6 +97,3 @@ object BackoffSupervisorPattern extends App {
   // after 1 second the backoff will kick in
 
 }
-
-
-// TODO https://stackoverflow.com/questions/60176088/how-to-disable-kotlin-compiler-in-intellij-idea-for-maven-java-projects

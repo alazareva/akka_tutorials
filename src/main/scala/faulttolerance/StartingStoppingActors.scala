@@ -7,13 +7,19 @@ object StartingStoppingActors extends App {
   val system = ActorSystem("stoppingDemo")
 
   object Parent {
+
     case class StartChild(name: String)
+
     case class StopChild(name: String)
+
     case object Stop
+
   }
 
   class Parent extends Actor with ActorLogging {
+
     import Parent._
+
     def withChildren(children: Map[String, ActorRef]): Receive = {
       case StartChild(name) =>
         log.info(s"Starting child $name")
@@ -27,6 +33,7 @@ object StartingStoppingActors extends App {
         context.stop(self) // stops all children first
       case s: String => log.info(s)
     }
+
     override def receive: Receive = withChildren(Map.empty[String, ActorRef])
   }
 
@@ -65,14 +72,16 @@ object StartingStoppingActors extends App {
 
   val terminatedActor = system.actorOf(Props[Child])
 
-  terminatedActor !  "getting terminated"
+  terminatedActor ! "getting terminated"
   terminatedActor ! Kill // exception gets thrown
-  terminatedActor !  "you're terminated"
+  terminatedActor ! "you're terminated"
 
   // Death watch
 
   class Watcher extends Actor with ActorLogging {
+
     import Parent._
+
     override def receive: Receive = {
       case StartChild(name) =>
         val child = context.actorOf(Props[Child], name)

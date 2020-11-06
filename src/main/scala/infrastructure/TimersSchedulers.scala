@@ -21,7 +21,7 @@ object TimersSchedulers extends App {
 
   system.log.info("Scheduling reminder for simple Actor")
 
-  system.scheduler.scheduleOnce(1 second){
+  system.scheduler.scheduleOnce(1 second) {
     simpleActor ! "reminder"
   }
 
@@ -46,9 +46,11 @@ object TimersSchedulers extends App {
         self ! PoisonPill
       }
     }
+
     override def postStop(): Unit = {
       log.warning("I shut down")
     }
+
     override def receive: Receive = {
       case msg =>
         log.info(msg.toString)
@@ -64,9 +66,13 @@ object TimersSchedulers extends App {
   // timer
 
   case object TimerKey
+
   case object Start
+
   case object Reminder
+
   case object Stop
+
   class TimerBasedHeartbeat extends Actor with ActorLogging with Timers {
     timers.startSingleTimer(TimerKey, Start, 1 second) // sends Start after 1 second
     override def receive: Receive = {

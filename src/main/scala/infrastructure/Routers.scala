@@ -10,11 +10,11 @@ object Routers extends App {
   class Parent extends Actor {
 
     // create routees
-   private val children = (0 until 5).map {i =>
-     val child = context.actorOf(Props[Child], f"$i")
-     context.watch(child)
-     ActorRefRoutee(child)
-   }
+    private val children = (0 until 5).map { i =>
+      val child = context.actorOf(Props[Child], f"$i")
+      context.watch(child)
+      ActorRefRoutee(child)
+    }
     // create router
     private val router = Router(RoundRobinRoutingLogic(), children)
 
@@ -56,7 +56,7 @@ object Routers extends App {
   val children = (0 until 5).map(i => system.actorOf(Props[Child], f"child$i"))
   val childPaths = children.map(_.path.toString)
   val groupRouter = system.actorOf(RoundRobinGroup(childPaths).props())
- //  (0 to 10).foreach(i => groupRouter ! f"hi $i")
+  //  (0 to 10).foreach(i => groupRouter ! f"hi $i")
 
   // from configuration
 
