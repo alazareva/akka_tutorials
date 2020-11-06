@@ -33,6 +33,9 @@ object ActorLifecycle extends  App {
   object Fail
   object FailChild
 
+  object Check
+  object CheckChild
+
   class Child extends Actor with ActorLogging {
     override def preStart(): Unit = log.info("supervised child starting")
     override def postStop(): Unit = log.info("supervised child stopping")
@@ -47,6 +50,7 @@ object ActorLifecycle extends  App {
       case Fail =>
         log.warning("child will fail")
         throw new RuntimeException("I failed")
+      case Check => log.info("alive")
     }
   }
 
@@ -54,10 +58,14 @@ object ActorLifecycle extends  App {
     private val child = context.actorOf(Props[Child], "supervised")
     override def receive: Receive = {
       case FailChild => child ! Fail
+      case CheckChild => child ! Check
     }
   }
 
 
   val supervisor = system.actorOf(Props[Parent], "sup")
   supervisor ! FailChild
+  supervisor ! CheckChild
+
+  // supervision strategy, if actor throws an exception the message that caused it is removed and it's restarted
 }
