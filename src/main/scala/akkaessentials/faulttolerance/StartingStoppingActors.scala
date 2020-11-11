@@ -1,4 +1,4 @@
-package faulttolerance
+package akkaessentials.faulttolerance
 
 import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem, Kill, PoisonPill, Props, Terminated}
 

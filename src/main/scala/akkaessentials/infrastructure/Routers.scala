@@ -1,4 +1,4 @@
-package infrastructure
+package akkaessentials.infrastructure
 
 import akka.actor.{Actor, ActorLogging, ActorSystem, Props, Terminated}
 import akka.routing.{ActorRefRoutee, Broadcast, FromConfig, RoundRobinGroup, RoundRobinPool, RoundRobinRoutingLogic, Router}

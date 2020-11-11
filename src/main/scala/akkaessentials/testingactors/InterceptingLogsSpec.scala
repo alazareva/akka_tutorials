@@ -1,4 +1,4 @@
-package testingactors
+package akkaessentials.testingactors
 
 import akka.actor.{Actor, ActorLogging, ActorSystem, Props}
 import akka.testkit.{EventFilter, ImplicitSender, TestKit}

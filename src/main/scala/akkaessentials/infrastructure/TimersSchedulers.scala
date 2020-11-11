@@ -1,4 +1,4 @@
-package infrastructure
+package akkaessentials.infrastructure
 
 import akka.actor.{Actor, ActorLogging, ActorSystem, Cancellable, PoisonPill, Props, Timers}
 
@@ -89,7 +89,6 @@ object TimersSchedulers extends App {
   }
 
   val heartbeatActor = system.actorOf(Props[TimerBasedHeartbeat])
-
   system.scheduler.scheduleOnce(5 second) {
     heartbeatActor ! Stop
   }

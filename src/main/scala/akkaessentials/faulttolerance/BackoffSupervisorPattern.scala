@@ -1,4 +1,4 @@
-package faulttolerance
+package akkaessentials.faulttolerance
 
 import java.io.File
 
