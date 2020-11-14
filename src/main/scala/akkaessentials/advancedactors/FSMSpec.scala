@@ -150,7 +150,7 @@ object FSMSpec {
       case Event(StateTimeout, WaitForMoneyData(inventory, prices, product, money, requester)) =>
         requester ! VendingError("Timed out")
         if (money > 0) requester ! GiveBackChange(money)
-       goto(Operational) using Initialized(inventory, prices)
+        goto(Operational) using Initialized(inventory, prices)
       case Event(ReceiveMoney(amount), WaitForMoneyData(inventory, prices, product, money, requester)) =>
         val price = prices(product)
         if (money + amount >= price) {
@@ -180,6 +180,7 @@ object FSMSpec {
 
     initialize()
   }
+
 }
 
 class FSMSpec extends
