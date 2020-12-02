@@ -57,17 +57,4 @@ object OpenGraphs extends App {
   )
 
   sourceGraph.via(flowGraph).to(sinkGraph).run()
-
-  // flow from sink to source
-
-  def fromSinkAndSource[A, B](sink: Sink[A, _], source: Source[B, _]): Flow[A, B, _] = {
-    GraphDSL.create() { implicit builder =>
-      import GraphDSL.Implicits._
-      // everything operates on shapes
-      val sourceShape = builder.add(source)
-      val sinkShape = builder.add(sink)
-
-      FlowShape(sinkShape.in, sourceShape.out)
-    }
-  }
 }
