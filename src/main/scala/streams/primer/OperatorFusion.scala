@@ -15,6 +15,7 @@ object OperatorFusion extends App {
   val simpleFlow2 = Flow[Int].map(_ * 10)
   val simpleSink = Sink.foreach[Int](println)
 
+
   // runs on the same actor bc of operator fusion
   // simpleSource.via(simpleFlow).via(simpleFlow2).to(simpleSink).run()
 
