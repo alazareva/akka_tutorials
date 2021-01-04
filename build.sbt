@@ -46,5 +46,12 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-http-testkit" % akkaHttpVersion,
 
   // JWT
-  "com.pauldijou" %% "jwt-spray-json" % "2.1.0"
+  "com.pauldijou" %% "jwt-spray-json" % "2.1.0",
+  
+  // clustering 
+  "com.typesafe.akka" %% "akka-actor" % akkaVersion,
+  "com.typesafe.akka" %% "akka-remote" % akkaVersion,
+  "com.typesafe.akka" %% "akka-cluster" % akkaVersion,
+  "com.typesafe.akka" %% "akka-cluster-sharding" % akkaVersion,
+  "com.typesafe.akka" %% "akka-cluster-tools" % akkaVersion
 )
